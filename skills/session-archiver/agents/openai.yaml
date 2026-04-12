@@ -1,0 +1,7 @@
+interface:
+  display_name: "Session Archiver"
+  short_description: "Install and tune Codex session archives"
+  brand_color: "#2563EB"
+  default_prompt: "Use $session-archiver to install or adjust transcript-based session archiving."
+policy:
+  allow_implicit_invocation: false

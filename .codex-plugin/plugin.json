@@ -1,0 +1,40 @@
+{
+  "name": "my-codex-skill",
+  "version": "0.1.0",
+  "description": "Archive Codex session transcripts into per-session Markdown files with hook-driven updates.",
+  "author": {
+    "name": "[TODO: Your Name]",
+    "email": "[TODO: your-email@example.com]",
+    "url": "https://github.com/YOUR_GITHUB_USERNAME"
+  },
+  "homepage": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill#readme",
+  "repository": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "hooks",
+    "session-archiver",
+    "markdown"
+  ],
+  "skills": "./skills/",
+  "hooks": "./.codex/hooks.json",
+  "interface": {
+    "displayName": "Codex Session Archiver",
+    "shortDescription": "Archive Codex sessions into Markdown",
+    "longDescription": "Render Codex CLI or IDE transcripts into date- and session-scoped Markdown archives using Stop and SessionStart hooks.",
+    "developerName": "[TODO: Your Name]",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Automation"
+    ],
+    "websiteURL": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill",
+    "defaultPrompt": [
+      "Archive this Codex session into Markdown and show the output path.",
+      "Explain how to install the session archiver hooks for this clone.",
+      "Adjust the Markdown archive format for my Codex transcripts."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

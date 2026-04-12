@@ -1,0 +1,6 @@
+[features]
+codex_hooks = true
+
+# Optional environment variables for the shell that launches Codex:
+#   export CODEX_SESSION_ARCHIVER_ROOT="/app/my-codex-skill"
+#   export CODEX_SESSION_ARCHIVE_ROOT="$HOME/codex-session-archives"

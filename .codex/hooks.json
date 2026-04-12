@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 \"${CODEX_SESSION_ARCHIVER_ROOT:-/app/my-codex-skill}/hooks/session_archiver_hook.py\" --archive-root \"${CODEX_SESSION_ARCHIVE_ROOT:-$HOME/codex-session-archives}\"",
+            "statusMessage": "Initializing session archive"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 \"${CODEX_SESSION_ARCHIVER_ROOT:-/app/my-codex-skill}/hooks/session_archiver_hook.py\" --archive-root \"${CODEX_SESSION_ARCHIVE_ROOT:-$HOME/codex-session-archives}\"",
+            "timeout": 30,
+            "statusMessage": "Updating session archive"
+          }
+        ]
+      }
+    ]
+  }
+}
