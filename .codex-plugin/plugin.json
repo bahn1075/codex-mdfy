@@ -7,8 +7,8 @@
     "email": "[TODO: your-email@example.com]",
     "url": "https://github.com/YOUR_GITHUB_USERNAME"
   },
-  "homepage": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill#readme",
-  "repository": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill",
+  "homepage": "https://github.com/YOUR_GITHUB_USERNAME/codex-mdfy#readme",
+  "repository": "https://github.com/YOUR_GITHUB_USERNAME/codex-mdfy",
   "license": "MIT",
   "keywords": [
     "codex",
@@ -30,7 +30,7 @@
       "Write",
       "Automation"
     ],
-    "websiteURL": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill",
+    "websiteURL": "https://github.com/YOUR_GITHUB_USERNAME/codex-mdfy",
     "defaultPrompt": [
       "Archive this Codex session into Markdown and show the output path.",
       "Explain how to install the session archiver skill and hooks for this clone.",
