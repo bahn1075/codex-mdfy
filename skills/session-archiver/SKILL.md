@@ -1,6 +1,6 @@
 ---
 name: session-archiver
-description: Install, debug, or extend transcript-based Codex session archiving that uses hooks plus a Markdown renderer to turn `~/.codex/sessions/*.jsonl` transcripts into `YYYY/MM/DD/codex_<session-id>.md` reports. Use when Codex needs to set up session logging hooks, troubleshoot missing archives, adjust the Markdown format, or export an existing session transcript manually.
+description: Install, debug, or extend transcript-based Codex session archiving that uses hooks plus a Markdown renderer to turn `~/.codex/sessions/*.jsonl` transcripts into `YYYY/MM/DD/codex_<session-id>.md` reports. Use when Codex needs to set up session logging hooks, register the daily git-sync cron job, troubleshoot missing archives, adjust the Markdown format, or export an existing session transcript manually.
 ---
 
 # Session Archiver
@@ -12,7 +12,7 @@ Use this skill to maintain the session archiver project or to manually export on
 ## Workflow
 
 1. Confirm whether the task is installation, debugging, or archive-format work.
-2. For installation or debugging, inspect `install.sh`, `.codex/hooks.json`, `bin/run_session_archiver_hook.sh`, and `hooks/session_archiver_hook.py`.
+2. For installation or debugging, inspect `install.sh`, `.codex/hooks.json`, `bin/run_session_archiver_hook.sh`, `bin/sync_archive_repo.sh`, and `hooks/session_archiver_hook.py`.
 3. For manual export or format changes, use `scripts/render_session_markdown.py` inside this skill.
 4. Keep the rendering logic in the skill script and keep the root hook file as a thin entrypoint.
 
@@ -25,7 +25,7 @@ cd /app/codex-mdfy
 ./install.sh
 ```
 
-The installer prompts once for the archive root, enables `codex_hooks`, links the skill into `~/.agents/skills/session-archiver`, links the hook runner into `~/.codex-mdfy/run_session_archiver_hook.sh`, and links `.codex/hooks.json` into `~/.codex/hooks.json`.
+The installer prompts once for the archive root, detects the containing git repo root, enables `codex_hooks`, links the skill into `~/.agents/skills/session-archiver`, links the hook and git-sync runners into `~/.codex-mdfy/`, links `.codex/hooks.json` into `~/.codex/hooks.json`, and registers a daily `03:00` cron sync job for the detected git repo.
 
 After installation, use normal `codex` commands. No separate launcher is required.
 
@@ -50,6 +50,7 @@ The renderer writes:
 ## Debugging
 
 - If no archive file appears, verify `codex_hooks = true`, that `~/.codex/hooks.json` points to this repo's hook config, and that `~/.codex-mdfy/run_session_archiver_hook.sh` exists.
+- If the daily git sync does not run, inspect `crontab -l`, `~/.codex-mdfy/sync_archive_repo.sh`, and `~/.codex-mdfy/logs/git-sync.log`.
 - If the hook runs but the Markdown is stale, inspect `transcript_path` from hook stdin and re-run the renderer manually with that same path.
 - If Markdown lands in the wrong directory, inspect `~/.codex-mdfy/session-archiver.env` and rerun `./install.sh` to pick a new archive root.
 - If command output is duplicated, prefer the transcript's `exec_command_end` event over `function_call_output` for `exec_command`.
