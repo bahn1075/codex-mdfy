@@ -43,7 +43,9 @@ def main() -> int:
         write_archive = load_renderer()
         write_archive(
             transcript_path=Path(transcript_path),
-            archive_root=Path(args.archive_root).expanduser() if args.archive_root else None,
+            archive_root=Path(args.archive_root).expanduser()
+            if args.archive_root
+            else None,
             session_id=payload.get("session_id"),
         )
         return 0

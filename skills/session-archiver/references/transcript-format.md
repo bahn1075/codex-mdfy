@@ -24,7 +24,7 @@ The session archiver reads Codex JSONL transcripts from `~/.codex/sessions/...`.
 The renderer writes:
 
 ```text
-<archive-root>/<YYYY-MM-DD>/<session-id>/session.md
+<archive-root>/<YYYY>/<MM>/<DD>/codex_<session-id>.md
 ```
 
 The date key comes from `session_meta.payload.timestamp` when available and falls back to the current date if the transcript is malformed.

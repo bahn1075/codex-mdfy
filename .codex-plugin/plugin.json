@@ -1,7 +1,7 @@
 {
-  "name": "my-codex-skill",
-  "version": "0.1.0",
-  "description": "Archive Codex session transcripts into per-session Markdown files with hook-driven updates.",
+  "name": "codex-mdfy",
+  "version": "0.2.0",
+  "description": "Archive Codex session transcripts into dated Markdown files with one-time shell-based installation.",
   "author": {
     "name": "[TODO: Your Name]",
     "email": "[TODO: your-email@example.com]",
@@ -14,14 +14,15 @@
     "codex",
     "hooks",
     "session-archiver",
-    "markdown"
+    "markdown",
+    "session-history"
   ],
   "skills": "./skills/",
   "hooks": "./.codex/hooks.json",
   "interface": {
-    "displayName": "Codex Session Archiver",
+    "displayName": "codex-mdfy",
     "shortDescription": "Archive Codex sessions into Markdown",
-    "longDescription": "Render Codex CLI or IDE transcripts into date- and session-scoped Markdown archives using Stop and SessionStart hooks.",
+    "longDescription": "Render Codex CLI or IDE transcripts into Markdown files stored under a user-selected YYYY/MM/DD archive tree after one-time installation.",
     "developerName": "[TODO: Your Name]",
     "category": "Productivity",
     "capabilities": [
@@ -32,7 +33,7 @@
     "websiteURL": "https://github.com/YOUR_GITHUB_USERNAME/my-codex-skill",
     "defaultPrompt": [
       "Archive this Codex session into Markdown and show the output path.",
-      "Explain how to install the session archiver hooks for this clone.",
+      "Explain how to install the session archiver skill and hooks for this clone.",
       "Adjust the Markdown archive format for my Codex transcripts."
     ],
     "brandColor": "#2563EB"

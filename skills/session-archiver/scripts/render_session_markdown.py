@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shlex
 from collections import Counter
 from dataclasses import dataclass, field
@@ -45,7 +46,9 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Render a Codex session transcript into a Markdown archive."
     )
-    parser.add_argument("--transcript", required=True, help="Path to a session JSONL transcript")
+    parser.add_argument(
+        "--transcript", required=True, help="Path to a session JSONL transcript"
+    )
     parser.add_argument(
         "--archive-root",
         default=None,
@@ -145,7 +148,9 @@ def format_metadata(metadata: dict[str, Any]) -> list[str]:
     return lines
 
 
-def parse_transcript(transcript_path: Path, session_id_override: str | None = None) -> ParsedTranscript:
+def parse_transcript(
+    transcript_path: Path, session_id_override: str | None = None
+) -> ParsedTranscript:
     events: list[ArchiveEvent] = []
     tool_calls: dict[str, dict[str, Any]] = {}
     session_id = session_id_override or transcript_path.stem
@@ -278,7 +283,9 @@ def parse_transcript(transcript_path: Path, session_id_override: str | None = No
                             "cwd": payload.get("cwd"),
                             "call_id": payload.get("call_id"),
                         },
-                        body="\n".join(section for section in body_sections if section).strip(),
+                        body="\n".join(
+                            section for section in body_sections if section
+                        ).strip(),
                     )
                 )
 
@@ -305,6 +312,15 @@ def resolve_archive_root(archive_root: Path | None) -> Path:
     return Path.home() / "codex-session-archives"
 
 
+def build_archive_filename(session_id: str) -> str:
+    sanitized_session_id = re.sub(r"[^A-Za-z0-9._-]+", "_", session_id).strip("._")
+    if not sanitized_session_id:
+        sanitized_session_id = "unknown-session"
+    if not sanitized_session_id.startswith("codex_"):
+        sanitized_session_id = f"codex_{sanitized_session_id}"
+    return f"{sanitized_session_id}.md"
+
+
 def resolve_output_path(
     parsed: ParsedTranscript,
     archive_root: Path | None,
@@ -315,18 +331,23 @@ def resolve_output_path(
 
     root = resolve_archive_root(archive_root)
     started = parse_timestamp(parsed.started_at) or datetime.now(timezone.utc)
-    date_key = started.date().isoformat()
-    return root / date_key / parsed.session_id / "session.md"
+    return (
+        root
+        / started.strftime("%Y")
+        / started.strftime("%m")
+        / started.strftime("%d")
+        / build_archive_filename(parsed.session_id)
+    )
 
 
 def render_markdown(parsed: ParsedTranscript, output_path: Path) -> str:
     counts = Counter(event.kind for event in parsed.events)
     tool_names = sorted(
-        {
-            event.metadata.get("tool")
-            for event in parsed.events
-            if event.kind in {"tool_call", "tool_result"} and event.metadata.get("tool")
-        }
+        tool_name
+        for event in parsed.events
+        if event.kind in {"tool_call", "tool_result"}
+        for tool_name in [event.metadata.get("tool")]
+        if isinstance(tool_name, str) and tool_name
     )
     non_zero_exits = sum(
         1
@@ -383,7 +404,9 @@ def write_archive(
     session_id: str | None = None,
 ) -> Path:
     parsed = parse_transcript(transcript_path, session_id_override=session_id)
-    destination = resolve_output_path(parsed, archive_root=archive_root, explicit_output=output_path)
+    destination = resolve_output_path(
+        parsed, archive_root=archive_root, explicit_output=output_path
+    )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(render_markdown(parsed, destination))
     return destination
@@ -393,7 +416,9 @@ def main() -> int:
     args = parse_args()
     destination = write_archive(
         transcript_path=Path(args.transcript).expanduser(),
-        archive_root=Path(args.archive_root).expanduser() if args.archive_root else None,
+        archive_root=Path(args.archive_root).expanduser()
+        if args.archive_root
+        else None,
         output_path=Path(args.output).expanduser() if args.output else None,
         session_id=args.session_id,
     )

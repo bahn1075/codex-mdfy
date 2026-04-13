@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 \"${CODEX_SESSION_ARCHIVER_ROOT:-/app/my-codex-skill}/hooks/session_archiver_hook.py\" --archive-root \"${CODEX_SESSION_ARCHIVE_ROOT:-$HOME/codex-session-archives}\"",
-            "statusMessage": "Initializing session archive"
+            "command": "/usr/bin/env bash \"$HOME/.codex-mdfy/run_session_archiver_hook.sh\"",
+            "statusMessage": "Initializing Markdown session archive"
           }
         ]
       }
@@ -17,9 +17,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 \"${CODEX_SESSION_ARCHIVER_ROOT:-/app/my-codex-skill}/hooks/session_archiver_hook.py\" --archive-root \"${CODEX_SESSION_ARCHIVE_ROOT:-$HOME/codex-session-archives}\"",
+            "command": "/usr/bin/env bash \"$HOME/.codex-mdfy/run_session_archiver_hook.sh\"",
             "timeout": 30,
-            "statusMessage": "Updating session archive"
+            "statusMessage": "Updating Markdown session archive"
           }
         ]
       }
