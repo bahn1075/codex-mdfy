@@ -153,7 +153,17 @@ codex_mdfy_link_with_backup() {
     printf 'Backed up %s to %s\n' "${target_path}" "${backup_path}" >&2
   fi
 
-  ln -sfn "${source_realpath}" "${target_path}"
+  if ln -sfn "${source_realpath}" "${target_path}" 2>/dev/null; then
+    return 0
+  fi
+
+  if [[ -d "${source_realpath}" ]]; then
+    cp -R "${source_realpath}" "${target_path}"
+  else
+    cp "${source_realpath}" "${target_path}"
+  fi
+
+  printf 'Symlink creation failed for %s. Installed a copied fallback instead.\n' "${target_path}" >&2
 }
 
 codex_mdfy_install_runtime_links() {
@@ -178,7 +188,11 @@ codex_mdfy_remove_legacy_launcher() {
 
 codex_mdfy_enable_hooks_feature() {
   if command -v codex >/dev/null 2>&1; then
-    codex features enable codex_hooks >/dev/null
+    if codex features enable codex_hooks >/dev/null 2>&1; then
+      return 0
+    fi
+
+    printf '%s\n' 'codex was found, but enabling codex_hooks failed. You can run it manually later.' >&2
     return 0
   fi
 
@@ -196,7 +210,7 @@ codex_mdfy_register_sync_cronjob() {
   crontab_bin="${CODEX_MDFY_CRONTAB_BIN:-crontab}"
   if ! command -v "${crontab_bin}" >/dev/null 2>&1; then
     printf '%s\n' 'crontab command not found. Unable to register the daily git sync job.' >&2
-    return 1
+    return 0
   fi
 
   mkdir -p "$(codex_mdfy_logs_dir)"
@@ -216,12 +230,16 @@ codex_mdfy_register_sync_cronjob() {
     skip == 0 && index($0, ".codex-mdfy/sync_archive_repo.sh") == 0 {print}
   ' "${crontab_dump_file}" > "${filtered_crontab_file}"
 
-  {
+  if ! {
     cat "${filtered_crontab_file}"
     printf '%s\n' '# BEGIN codex-mdfy daily git sync'
     printf '%s\n' "${cron_line}"
     printf '%s\n' '# END codex-mdfy daily git sync'
-  } | "${crontab_bin}" -
+  } | "${crontab_bin}" - 2>/dev/null; then
+    rm -f "${crontab_dump_file}" "${filtered_crontab_file}"
+    printf '%s\n' 'Unable to register the daily git sync job with crontab. Install completed without the scheduled sync.' >&2
+    return 0
+  fi
 
   rm -f "${crontab_dump_file}" "${filtered_crontab_file}"
 }
