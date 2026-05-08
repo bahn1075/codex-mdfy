@@ -25,7 +25,7 @@ cd /app/codex-mdfy
 ./install.sh
 ```
 
-The installer prompts once for the archive root, detects the containing git repo root, enables `codex_hooks`, links the skill into `~/.agents/skills/session-archiver`, links the hook and git-sync runners into `~/.codex-mdfy/`, links `.codex/hooks.json` into `~/.codex/hooks.json`, and registers a daily `03:00` cron sync job for the detected git repo.
+The installer prompts once for the archive root, detects the containing git repo root, enables `hooks`, links the skill into `~/.agents/skills/session-archiver`, links the hook and git-sync runners into `~/.codex-mdfy/`, links `.codex/hooks.json` into `~/.codex/hooks.json`, and registers a daily `03:00` cron sync job for the detected git repo.
 
 After installation, use normal `codex` commands. No separate launcher is required.
 
@@ -49,7 +49,7 @@ The renderer writes:
 
 ## Debugging
 
-- If no archive file appears, verify `codex_hooks = true`, that `~/.codex/hooks.json` points to this repo's hook config, and that `~/.codex-mdfy/run_session_archiver_hook.sh` exists.
+- If no archive file appears, verify `hooks = true`, that `~/.codex/hooks.json` points to this repo's hook config, and that `~/.codex-mdfy/run_session_archiver_hook.sh` exists.
 - If the daily git sync does not run, inspect `crontab -l`, `~/.codex-mdfy/sync_archive_repo.sh`, and `~/.codex-mdfy/logs/git-sync.log`.
 - If the hook runs but the Markdown is stale, inspect `transcript_path` from hook stdin and re-run the renderer manually with that same path.
 - If Markdown lands in the wrong directory, inspect `~/.codex-mdfy/session-archiver.env` and rerun `./install.sh` to pick a new archive root.

@@ -188,15 +188,15 @@ codex_mdfy_remove_legacy_launcher() {
 
 codex_mdfy_enable_hooks_feature() {
   if command -v codex >/dev/null 2>&1; then
-    if codex features enable codex_hooks >/dev/null 2>&1; then
+    if codex features enable hooks >/dev/null 2>&1; then
       return 0
     fi
 
-    printf '%s\n' 'codex was found, but enabling codex_hooks failed. You can run it manually later.' >&2
+    printf '%s\n' 'codex was found, but enabling hooks failed. You can run it manually later.' >&2
     return 0
   fi
 
-  printf '%s\n' 'codex command not found. Install completed, but codex_hooks was not enabled automatically.' >&2
+  printf '%s\n' 'codex command not found. Install completed, but hooks was not enabled automatically.' >&2
 }
 
 codex_mdfy_register_sync_cronjob() {

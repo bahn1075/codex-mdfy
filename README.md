@@ -25,7 +25,7 @@ The installer will:
 
 1. Ask where Markdown session histories should be stored.
 2. Save that directory once as the archive top-level root.
-3. Enable the `codex_hooks` feature when `codex` is available.
+3. Enable the `hooks` feature when `codex` is available.
 4. Link the skill into `~/.agents/skills/session-archiver`.
 5. Link the hook runner into `~/.codex-mdfy/run_session_archiver_hook.sh`.
 6. Detect the containing git repo root for the selected path.
