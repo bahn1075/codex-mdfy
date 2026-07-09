@@ -39,7 +39,18 @@ The script first asks which session source to configure:
 ```
 
 Then it asks for the Obsidian vault directory. If `/app/obsidian` exists, it is
-offered as the default.
+offered as the default. Otherwise, if `~/app/obsidian` exists, that is offered
+as the default. If neither exists, `~/obsidian` is offered.
+
+On macOS, a typical run looks like:
+
+```text
+Session source [1. codex, 2. claude] [1]: 2
+Obsidian vault directory [/Users/cozy/app/obsidian]:
+```
+
+The first prompt is only for choosing the session source. Enter the vault path
+at the second prompt.
 
 ## What The Script Does
 

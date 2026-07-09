@@ -8,6 +8,8 @@ timestamp() {
 default_vault() {
   if [[ -d /app/obsidian ]]; then
     printf '%s\n' /app/obsidian
+  elif [[ -d "${HOME}/app/obsidian" ]]; then
+    printf '%s\n' "${HOME}/app/obsidian"
   else
     printf '%s\n' "${HOME}/obsidian"
   fi
@@ -33,16 +35,51 @@ expand_home() {
 resolve_dir() {
   local raw
   raw="$(expand_home "$1")"
-  mkdir -p "${raw}"
-  cd "${raw}" && pwd -P
+
+  if ! mkdir -p "${raw}"; then
+    printf 'Failed to create vault directory: %s\n' "${raw}" >&2
+    printf 'Check the path and permissions, then run again.\n' >&2
+    return 1
+  fi
+  if ! cd "${raw}"; then
+    printf 'Failed to enter vault directory: %s\n' "${raw}" >&2
+    return 1
+  fi
+  pwd -P
 }
 
 realpath_if_exists() {
   local path
-  path="$1"
+  local link_target
+  local parent
+  local name
 
-  if [[ -e "${path}" || -L "${path}" ]]; then
-    readlink -f "${path}" || true
+  path="$1"
+  path="$(expand_home "${path}")"
+
+  if [[ -L "${path}" ]]; then
+    link_target="$(readlink "${path}")" || return 0
+    case "${link_target}" in
+      /*)
+        realpath_if_exists "${link_target}"
+        ;;
+      *)
+        parent="$(dirname "${path}")"
+        realpath_if_exists "${parent}/${link_target}"
+        ;;
+    esac
+    return 0
+  fi
+
+  if [[ -d "${path}" ]]; then
+    cd "${path}" && pwd -P
+    return 0
+  fi
+
+  if [[ -e "${path}" ]]; then
+    parent="$(dirname "${path}")"
+    name="$(basename "${path}")"
+    printf '%s/%s\n' "$(cd "${parent}" && pwd -P)" "${name}"
   fi
 }
 
@@ -65,6 +102,10 @@ prompt_product() {
       printf '%s\n' "claude"
       ;;
     *)
+      if [[ "${requested}" == */* ]]; then
+        printf 'That looks like a vault path, but this prompt asks for the session source first.\n' >&2
+        printf 'Run again and enter 1 for codex or 2 for claude, then enter the vault path at the next prompt.\n' >&2
+      fi
       printf 'Unknown selection: %s\n' "${requested}" >&2
       return 1
       ;;
