@@ -1,6 +1,0 @@
-[features]
-hooks = true
-
-# `./install.sh` enables this automatically when `codex` is installed.
-# The selected archive root is persisted in:
-#   ~/.codex-mdfy/session-archiver.env
